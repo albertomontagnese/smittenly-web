@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Smittenly — Privacy Policy</title>
+  <title>Honest Dating — Privacy Policy</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
     <header>
-      <h1><a href="index.html" style="color:inherit;text-decoration:none">Smittenly</a></h1>
+      <h1><a href="index.html" style="color:inherit;text-decoration:none">Honest Dating</a></h1>
       <nav>
         <a href="privacy.html">Privacy</a>
         <a href="support.html">Support</a>
@@ -19,18 +19,41 @@
     <main>
 <h1 class="title">Privacy Policy</h1>
 <p class="lede">Effective May 2026</p>
-<p>Smittenly ("the app") is built and operated by Alberto Montagnese. We try to collect as
-little data as possible — this page describes exactly what is and isn't
-collected, and how it's used.</p>
+<p>Honest Dating ("the app") is built and operated by Alberto Montagnese.
+This page describes exactly what is and isn't collected, and how it's used.
+The app's only authentication method is Sign in with Apple, and the app's
+backend runs on Google Firebase (Firestore + Cloud Storage + Firebase
+Authentication).</p>
 
 <h2>Data we collect</h2>
 <ul>
-  <li><strong>Device push token.</strong> If you opt in to notifications,
-      we store your APNs device token on our server so we can send you
-      alerts. The token is not linked to any personal identifier.</li>
-  <li><strong>App preferences.</strong> Your filter / subscription choices
-      (e.g. which CBP enrollment offices you want alerts for) are stored
-      on our server and associated only with the device token above.</li>
+  <li><strong>Apple-issued user identifier.</strong> When you Sign in with
+      Apple, Apple gives the app a stable opaque user id (a "uid"). We
+      store it as the primary key of your profile in our database.</li>
+  <li><strong>Profile data you enter.</strong> Your first name, date of
+      birth (used to derive your age and to enforce the 18+ gate — only
+      your age, never your full birthday, is shown to other users), the
+      gender you identify as, the genders you'd like to see, your chosen
+      prompt and prompt answer, the freeform "region" string (e.g.
+      "Brooklyn, NY"), your optional bio, your accepted age range, and
+      your "what I'm here for" (intentions) selection.</li>
+  <li><strong>Profile photos.</strong> The photos you upload are stored in
+      Firebase Cloud Storage under your uid. Other signed-in users can see
+      them, but they are not publicly listed or indexed.</li>
+  <li><strong>Swipes.</strong> When you swipe left or right on someone, we
+      store the swipe under your uid so we know not to show that person
+      again, and so we can detect mutual likes.</li>
+  <li><strong>Matches and chat messages.</strong> When two people both
+      swipe right on each other, a "match" record is created. Messages
+      sent inside that match are stored alongside it. Only the two
+      participants can read them; server-side security rules enforce
+      this.</li>
+  <li><strong>Reports.</strong> If you report another user, we store
+      your report (your uid, the reported uid, and the reason you picked).
+      We use this to triage abuse.</li>
+  <li><strong>Block list.</strong> If you block someone, we store both
+      sides of the block on your profile so the deck and matches list
+      can filter accordingly.</li>
   <li><strong>Crash + diagnostic logs.</strong> Apple sends us aggregate
       crash reports if you've enabled "Share with Developers" in iOS
       Settings → Privacy. These contain no personal data.</li>
@@ -38,36 +61,67 @@ collected, and how it's used.</p>
 
 <h2>Data we don't collect</h2>
 <ul>
-  <li>We do not collect your name, email address, phone number, or any
+  <li>We don't ask for your email address, phone number, or any
       government identifier.</li>
-  <li>We do not track your location.</li>
-  <li>We do not sell, rent, or share your data with third parties for
+  <li>We don't ask for or store your race, ethnicity, religion, weight,
+      sexual orientation (beyond the genders you indicate you'd like to
+      see), or any other protected characteristic.</li>
+  <li>We don't request or use location services. Your "region" is whatever
+      free text you typed in the app.</li>
+  <li>We don't sell, rent, or share your data with third parties for
       advertising or analytics.</li>
+  <li>We don't run third-party tracking SDKs, attribution networks, or
+      ad networks. The only third-party SDK in the app is Google Firebase,
+      which we use as our database / storage / auth backend.</li>
+  <li>The "Smart Filter" natural-language search runs entirely on your
+      device. The text you type into it is not sent anywhere.</li>
 </ul>
 
 <h2>Third parties</h2>
-<p>The only third party that ever sees your device token is Apple, via the
-Apple Push Notification service (APNs), which is required to deliver
-notifications.</p>
-
-<h2>Your choices</h2>
 <ul>
-  <li>You can revoke notification permission at any time in iOS Settings.</li>
-  <li>You can delete the app to stop all data collection. Your stored
-      preferences and device token are deleted from our server within 30
-      days of last use.</li>
+  <li><strong>Apple</strong> handles authentication via Sign in with
+      Apple. Apple does not see your activity inside the app.</li>
+  <li><strong>Google Firebase</strong> (a service of Google LLC) hosts
+      our database (Firestore), file storage (Cloud Storage), and auth
+      bridge (Firebase Authentication). Firebase processes your profile
+      data, photos, swipes, matches, messages, and reports as our
+      data processor under a standard agreement.</li>
 </ul>
 
+<h2>Your choices and rights</h2>
+<ul>
+  <li><strong>Edit anything.</strong> Profile → edit your prompt, bio,
+      photos, region, age range, intention, or "show me" preferences at
+      any time.</li>
+  <li><strong>Block / unmatch / report.</strong> Available from every
+      chat header.</li>
+  <li><strong>Delete your account.</strong> Profile → "Delete account"
+      removes your profile document and your photos from our backend
+      and signs you out. Messages you sent inside still-existing matches
+      may persist for the other participant until they unmatch you;
+      this is documented in the in-app delete confirmation.</li>
+</ul>
+
+<h2>Data retention</h2>
+<p>Profile data lives until you delete your account. Reports are kept
+for as long as needed to triage and act on abuse. Crash logs delivered
+through Apple's TestFlight / App Store Connect channel are retained
+according to Apple's policies.</p>
+
 <h2>Children</h2>
-<p>The app is not directed to children under 13 and does not knowingly
-collect data from them.</p>
+<p>Honest Dating is 18+. The onboarding flow blocks any birth date that
+makes the user younger than 18, and the security rules treat profiles
+with `age &lt; 18` as not viewable in the deck regardless of client
+behavior. The app is not directed to children, and we do not knowingly
+collect data from anyone under 18.</p>
 
 <h2>Changes</h2>
-<p>If this policy materially changes, the updated version will be published
-here with a new effective date.</p>
+<p>If this policy materially changes, the updated version will be
+published here with a new effective date.</p>
 
 <h2>Contact</h2>
-<p>Questions: <a href="mailto:alberto.montagnese@gmail.com">alberto.montagnese@gmail.com</a>.</p>
+<p>Questions, requests, or data deletion outside the in-app flow:
+<a href="mailto:alberto.montagnese@gmail.com">alberto.montagnese@gmail.com</a>.</p>
 
     </main>
     <footer>
